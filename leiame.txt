@@ -1,0 +1,298 @@
+laravel hardcore
+****************
+
+Um projeto com o nome de confee, aplicativo para registrar conferencias de tecnologia.
+
+
+--------------------------------------------------------------------------------------
+
+Trocando namespace
+******************
+
+php artisan app:name Confee
+
+Organizar o composer.json  com o nome do projeto, descrição e etc.
+
+
+Instalando o ambiente docker (opcional)
+****************************************
+
+
+--------------------------------------------------------------------------------------
+
+
+Removendo o front end da api
+****************************
+
+Delete;
+
+package.json
+gulpfile.js
+
+Dentro de public/ remover
+
+/js
+/css
+
+Ressources dentro de assets/ deletar
+
+/js
+/sass/
+
+criar um arquivo .gitKeep dentro de assets só para o git poder salvar a pasta
+
+Dentro de views/ deletar
+
+o arquivo dentro da pasta errors/
+o arquivo welcome.blade.php
+
+----------------------------------------------------------------------------------------
+
+Iniciando o Dominio
+*******************
+
+Dentro de app criar diretorio Domains
+
+Domains/Users
+
+Mover User.php para dentro de Users e renomear os namespaces
+
+Renomear o caminho dentro de config auth.php o users
+
+Dentro de User criar um diretorio Migrations
+
+Baixar pacote para melhorar o desempenho com migrations, (opcional)
+
+composer require artesaos/migrator
+
+Dentro de app criar um diretorio Support
+
+Esse diretorio, vai ficar codigo reaproveitavel, logica de algumas classes, classes
+abstratas.
+
+Dentro dela criar Database/Migration.php
+
+Definir essa classe como abstrata e extender a migrations do laravel
+
+Criar um classe dentro de Domains\Users\Database\Migrations\CreateUsersTable.php
+
+Nesta classe vai ter os metodos up() e dow() e vai ter as propriedades das migrations
+
+Depois que importar as duas classes prinpipais, remover a pasta migrations do laravel
+
+Criar um diretororio dentro de Users chamado Providers e uma classe DomainServiceProvieder
+
+Ela extend a classe ServiceProvider do laravel.
+
+registrar dentro de config/app.php o pacote baixado Migrator\MigrationServiceProvider::class
+
+dentro de domainServiceProvider colocar em orderm as migrations a serem executadas
+
+dentro do bash para rodar as migrations agora com o pacote o comando é php artisan migrator
+
+registrar o provider dentro de app.php Confee\Domains\Users\Providers\DomainServiceProvider::class,
+
+-----------------------------------------------------------------------------------------------------
+
+Dentro de app criar uma pasta chamada Units, poderia ser o nome que quise-se
+Aqui vai tratar o que é aplicação, http, providers etc...
+
+Passar os controllers do Auth para a pasta controllers dentro de Units (criar as pastaas)
+
+Passar o controller principal para dentro da pasta controller dentro de support (criar as pastas)
+
+IMPORTANTE: RENOMEAR OS NAMESPACES
+
+Criar pasta Cors dentro de Units e mover os middleware para dentro de cors/http/middleware
+
+Mover o Kernel.php principal dentro de controller para dentro de units
+
+Renomea-lo para HttpKernel e fazer os ajustes
+
+Mover execption de exectpions dentro de Controllers para Units e renomear como ExceptionsHandler
+
+Deletar AppServiceProvider dentro de providers
+
+Mover AuthServiceProvider para dentro de Units/Authentication/Providers
+
+Delete broadcastServiceProvider, não vai usar nesta aplicação
+
+Mover console de Console para Units e renomear para ConsoleKernel
+
+Em pasta routes vamos usar só api.php, passar para http dentro de units e renomear para
+routes.php, e arrumar o caminho dentro de RouteServiceProvider, depois apagar essa pasta
+routes.
+
+
+Registrar no app.php   Confee\Units\Authentication\Providers\UnitServiceProvider::class,
+
+Dentro de bootstrap/app.php arrumar os caminhos dos kernel
+
+deletar         $this->mapWebRoutes(); dentro de RouteServiceProvider
+
+depois de tirar todas as factories, apagar a pasta database do laravel, junto com as factories e
+seeders
+
+-------------------------------------------------------------------------------------------------
+
+Seeders
+*******
+
+depois de criar o arquivo userseeders, e registra-lo no DomainServiceProvider rodar o comando
+
+php artisan migrator:regresh --seed ou -> roda todas a migrations
+php artisan migrator --seed ou o nome da seed
+
+-------------------------------------------------------------------------------------------------
+
+Configurando ambiente de testes
+*******************************
+
+deletar dentro de composer
+
+autoload -> classmap
+
+em autoload-dev colocar
+"psr-4": {
+    "Confee\\": "tests/unit"
+}
+
+onde serão definidos testes unitarios
+
+criar um segundo diretorio integration
+
+
+
+phpunit.xml seta configuraçoes para testes
+
+na hora dos testes automatizados vamos usar banco sqlite, então em config configurar os dados
+da conexao.
+
+criamos uma nova conexao
+'testing' => [
+    'driver' => 'sqlite',
+    'database' => ':memory:' // isso faz com que o arquivo sqlite não seja criado, e sim apenas em memoria, depois é destruido
+    'prefix' => '',
+],
+
+depois no arquivo phpunit crio uma sessão setando o banco para usar no teste
+
+
+rodar o dump para as modificações no composer
+
+criar um alias para rodar os testes
+
+alias vendor/bin/phpunit phpunit
+
+agora só rodasr phpunit para rodar os tests
+
+----------------------------------------------------------------------------------------------------------
+
+
+Autenticação com JWT
+********************
+
+instalando pacote jwt-auth
+
+adicionar composer
+
+adicionar no composer 
+
+"minimum-stability": "dev", 
+"prefer-stable": true,
+
+
+config/app adicionar o provedor
+
+ Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
+ Alterar em auth.php o driver da api para 'jwt'
+
+ configurar as chaves
+
+ php artisan vendor:publish
+
+ gera o arquivo jwt.php dentro de config
+
+ php artisan jwt:secret
+
+ Criar um usuario teste para fazer o login, adicionar rotas em api.route e testar
+ fazendo o post com a rota de login
+
+ implementar na entity User JWTSubject e os metodos que ele herda
+
+ passar por post na url login, o email e password para obter o token
+
+ depois só passar no header Authorization e Bearer com o token
+
+ ------------------------------------------------------------------------------------
+
+ throttles login
+ ***************
+ Basicamente o que ela faz é verificar a quantidade de requisições que o usuario faz
+ na rota de login, e barrar o acesso caso há varias tentativas, podendo ser um ataque,
+
+ dentro de um minuto se errar 5 vezes ele manda a exeption
+
+
+ -------------------------------------------------------------------------------------
+
+ Cadastro de usuarios
+ ********************
+ Registrando usuarios no controller RegisterController e retornando o token gerado
+ com os dados do usuario
+
+ -------------------------------------------------------------------------------------
+
+Always Expects Json
+*******************
+No bash para debug curl -vvv -XPOST localhost:8000/register é um cliente http para linha de comando, usado para debugar a aplicacao
+
+-vvv nistra o maximo de informação de debug
+
+-XPOST para dizer que pe um Requisição do tipo POST
+
+curl -vvv -H 'Accept: application/json' -XPOST localhost:8000/register
+
+Para não ter que ficar exigindo sempre que o usuario informe que o header é json vamos tratar no backend
+
+Dentro de Units/Core/Middleware criar uma class AlwaysExpectsson
+
+onde vamos informar ao laravel que as requisições vão retornar em application/json, assim o usuario não precisa
+mandar sempre a requisição no header informado
+
+Registrar essa classe AlwaysExpectsJson no core HttpKernel.php
+
+    protected $middleware = [
+        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+    ];
+
+agora ele não redireciona mais para a rota login, pq é uma api e isso tem que ser feito no front
+
+no bash para testa colocar curl -vvv -XGET login:8000/user
+
+
+-----------------------------------------------------------------------------------------------
+
+Exception Handler e APis
+************************
+
+Trata como retornar o erro para o front, ja que é uma api.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
