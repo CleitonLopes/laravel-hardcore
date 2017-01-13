@@ -173,11 +173,12 @@ return [
         /**
          * Domains Services Providers
          */
-        Confee\Domains\Users\Providers\DomainServiceProvider::class,
         Confee\Domains\Customers\Providers\DomainServiceProvider::class,
         Confee\Domains\Applications\Providers\DomainServiceProvider::class,
         Confee\Domains\TypeFiles\Providers\DomainServiceProvider::class,
         Confee\Domains\ExtensionType\Providers\DomainServiceProvider::class,
+        Confee\Domains\ApplicationExtensionType\Providers\DomanServiceProvider::class,
+        Confee\Domains\ApplicationCustomers\Providers\DomainServiceProvider::class,
 
         /*
          * Application Service Providers...

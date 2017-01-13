@@ -1,16 +1,14 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: cleiton
- * Date: 12/01/2017
- * Time: 15:28
+ * Date: 13/01/2017
+ * Time: 09:23
  */
 
-namespace Confee\Domains\TypeFiles\Providers;
+namespace Confee\Domains\ApplicationCustomers\Providers;
 
-use Confee\Domains\TypeFiles\Database\Migrations\CreateTableTypeFiles;
-
+use Confee\Domains\ApplicationCustomers\Database\Migrations\CreateTableApplicationCustomers;
 use Illuminate\Support\ServiceProvider;
 use Migrator\MigratorTrait as HasMigrations;
 
@@ -26,11 +24,11 @@ class DomainServiceProvider extends ServiceProvider
 
     protected function registerMigrations()
     {
-        $this->migrations([
+      $this->migrations([
 
-            CreateTableTypeFiles::class
+          CreateTableApplicationCustomers::class
 
-        ]);
+      ]);
     }
 
     protected function registerFactories()
@@ -42,4 +40,5 @@ class DomainServiceProvider extends ServiceProvider
     {
 
     }
+
 }

@@ -27,6 +27,8 @@ class CreateTableApplicationExtensionType extends Migration
             $table->foreign('idApplication')->references('id')->on('applications');
             $table->foreign('idExtensionType')->references('id')->on('extension_type');
 
+            $table->timestamps();
+
         });
     }
 
