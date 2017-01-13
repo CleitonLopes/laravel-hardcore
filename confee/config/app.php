@@ -167,6 +167,7 @@ return [
          * Package Service Providers...
          */
 
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
         Migrator\MigrationServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 

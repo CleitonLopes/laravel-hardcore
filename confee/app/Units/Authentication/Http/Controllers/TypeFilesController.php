@@ -10,7 +10,7 @@ namespace Confee\Units\Authentication\Http\Controllers;
 
 
 use Confee\Support\Http\Controllers\Controller;
-use Confee\Units\Authentication\Http\Services\TypeFilesService;
+use Confee\Units\Authentication\Services\TypeFilesService;
 use Confee\Units\ExceptionHandler as Exception;
 use Illuminate\Http\Request;
 

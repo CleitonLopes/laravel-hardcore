@@ -284,7 +284,12 @@ Trata como retornar o erro para o front, ja que é uma api.
 Pacotes adicionais
 ******************
 
-Laravel-validator - "prettus/laravel-validation": "1.1.*"
+L5-repository
+
+Mudar caminho dos arquivos a serem gerados dentro de repository.php dentro da pasta config
+
+Registrar $this->app->register(RepositoryServiceProvider::class) dentro de Units/Authentication/Providers
+
 
 
 
