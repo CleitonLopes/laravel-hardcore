@@ -32,7 +32,7 @@ class DomainServiceProvider extends ServiceProvider
     {
 
         $this->registerMigrations();
-        $this->registerFactories();
+        //$this->registerFactories();
         $this->registerSeeders();
     }
 

@@ -29,7 +29,7 @@ class UserFactory extends ModelFactory
             'email' => $this->faker->unique()->safeEmail,
             'password' => $password ?: $password = bcrypt('secret'),
             'remember_token' => str_random(10),
-            'idcustomer' => 0
+            'idcustomer' => null
         ];
     }
 }

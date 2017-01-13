@@ -26,6 +26,10 @@ class Api extends RoutesFile
         $this->userRoutes();
         $this->loginRoutes();
         $this->signUpRoutes();
+
+        // type-files
+        $this->typeFilesRoutes();
+
     }
 
     protected function registerV1Routes()
@@ -50,5 +54,22 @@ class Api extends RoutesFile
     protected function signUpRoutes()
     {
         $this->router->post('register', 'RegisterController@register');
+    }
+
+    protected function typeFilesRoutes()
+    {
+
+        $this->router->group(['prefix' => 'type-file'], function() {
+
+            $this->router->get('', ['uses' => 'TypeFilesController@findAll']);
+            $this->router->get('{id}', ['uses' => 'TypeFilesController@findById']);
+            $this->router->post('', ['uses' => 'TypeFilesController@create']);
+            $this->router->put('{id}', ['uses' => 'TypeFilesController@update']);
+            $this->router->delete('{id}', ['uses' => 'TypeFilesController@delete']);
+
+        });
+
+
+
     }
 }

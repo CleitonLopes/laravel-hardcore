@@ -24,8 +24,9 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->rememberToken();
 
-            $table->integer('idcustomer')->unsigned();
+            $table->integer('idcustomer')->nullable();
             $table->foreign('idcustomer')->references('id')->on('customers');
+
             $table->timestamps();
         });
     }
