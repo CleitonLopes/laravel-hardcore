@@ -1,6 +1,6 @@
 <?php
 
-namespace Confee\Domains\TypeFiles;
+namespace Confee\Domains\TypeFiles\Entitie;
 
 
 use Illuminate\Database\Eloquent\Model;

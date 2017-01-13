@@ -5,7 +5,7 @@ namespace Confee\Units\Authentication\Repositories;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Confee\Units\Authentication\Contracts\Repositories\TypeFileRepository;
-use Confee\Domains\TypeFiles\TypeFile;
+use Confee\Domains\TypeFiles\Entitie\TypeFile;
 
 /**
  * Class TypeFileRepositoryEloquent
