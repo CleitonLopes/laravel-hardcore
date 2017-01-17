@@ -10,8 +10,11 @@
 namespace Confee\Units\Authentication\Services;
 
 use Confee\Units\Authentication\Contracts\Repositories\TypeFileRepository;
+use Confee\Units\Authentication\Services\Utils\File\FileService;
 use Confee\Units\Authentication\Validators\TypeFileValidator;
-use Confee\Units\ExceptionHandler as Exception;
+use Prettus\Validator\Exceptions\ValidatorException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 class TypeFilesService
 {
@@ -24,12 +27,17 @@ class TypeFilesService
      * @var TypeFileValidator
      */
     private $typeFileValidator;
+    /**
+     * @var FileService
+     */
+    private $fileService;
 
-    public function __construct(TypeFileRepository $typeFileRepository, TypeFileValidator $typeFileValidator)
+    public function __construct(TypeFileRepository $typeFileRepository, TypeFileValidator $typeFileValidator, FileService $fileService)
     {
 
         $this->typeFileRepository = $typeFileRepository;
         $this->typeFileValidator = $typeFileValidator;
+        $this->fileService = $fileService;
     }
 
     public function findAll()
@@ -38,7 +46,7 @@ class TypeFilesService
         {
 
         }
-        catch(Exception $e)
+        catch(ValidatorException $e)
         {
 
         }
@@ -50,7 +58,7 @@ class TypeFilesService
         {
 
         }
-        catch(Exception $e)
+        catch(ValidatorException $e)
         {
 
         }
@@ -60,14 +68,35 @@ class TypeFilesService
     {
         try
         {
+
             $this->typeFileValidator->with($data)->passesOrFail(TypeFileValidator::RULE_CREATE);
 
-            return $this->typeFileRepository->create($data);
+            return $this->createFile($data['arquivo'], $data);
 
         }
-        catch(Exception $e)
+        catch(ValidatorException $e)
         {
-            return response()->json(['error' => $e], 500);
+            return response()->json(['message' => $e]);
+        }
+    }
+
+    public function createFile(UploadedFile $arquivo, $data)
+    {
+        try
+        {
+            // Pega as informações do arquivo
+            $fileInfo = $this->fileService->getFileInfo($arquivo, $data);
+
+            // Guarda o arquivo localmente
+            $storeFile = $this->fileService->storeFile($fileInfo);
+
+            // Grava o registro do arquivo
+            return $this->typeFileRepository->create(array_merge($fileInfo, $storeFile));
+
+        }
+        catch(ValidatorException $e)
+        {
+            throw $e;
         }
     }
 
@@ -77,7 +106,7 @@ class TypeFilesService
         {
 
         }
-        catch(Exception $e)
+        catch(ValidatorException $e)
         {
 
         }
@@ -89,7 +118,7 @@ class TypeFilesService
         {
 
         }
-        catch(Exception $e)
+        catch(ValidatorException $e)
         {
 
         }
